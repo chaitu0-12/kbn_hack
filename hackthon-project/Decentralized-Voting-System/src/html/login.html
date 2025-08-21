@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: azure;
+    }
+    
+    h1 {
+      margin-bottom: 30px;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 30px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #4a90e2;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+    
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #357abd, #2a5f8a);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    #error-message {
+      background: rgba(229, 57, 53, 0.2);
+      border: 1px solid rgba(229, 57, 53, 0.5);
+      padding: 12px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    
+    input[type="radio"] {
+      accent-color: #4a90e2;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Decentralized Voting Using Ethereum Blockchain</h1>
+  <div class="container">
+    <h1>Login</h1>
+    <div id="error-message" role="alert" style="display:none;"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="voter_id"><h3>Voter ID</h3></label>
+        <input type="text" class="form-control" id="voter_id" name="voter_id" placeholder="Enter your voter ID" required>
+      </div>
+      <div class="form-group">
+        <label for="password"><h3>Password</h3></label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+      <div class="form-group">
+        <h3>Role</h3>
+        <div class="radio-group">
+          <label><input type="radio" name="role" value="admin"> Admin</label>
+          <label><input type="radio" name="role" value="voter" checked> Voter</label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary"><b>Login</b></button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('loginForm');
+      const errorMessage = document.getElementById('error-message');
+      
+      // Function to show error messages
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        
+        // Hide error after 5 seconds
+        setTimeout(() => {
+          errorMessage.style.display = 'none';
+        }, 5000);
+      }
+      
+      // Handle form submission
+      loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Hide any previous error messages
+        errorMessage.style.display = 'none';
+        
+        // Get form values
+        const voterId = document.getElementById('voter_id').value;
+        const password = document.getElementById('password').value;
+        const role = document.querySelector('input[name="role"]:checked').value;
+        
+        // Simple validation
+        if (!voterId || !password) {
+          showError('Please fill in all fields');
+          return;
+        }
+        
+        try {
+          // Show loading state
+          const loginButton = loginForm.querySelector('button');
+          const originalText = loginButton.innerHTML;
+          loginButton.innerHTML = '<span>Logging in...</span>';
+          loginButton.disabled = true;
+          
+          // Send login request to backend
+          const response = await fetch('http://127.0.0.1:8000/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `voter_id=${encodeURIComponent(voterId)}&password=${encodeURIComponent(password)}`
+          });
+          
+          // Handle response
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || `Login failed with status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            // Store the token based on role
+            if (data.role === 'admin') {
+              localStorage.setItem('jwtTokenAdmin', data.token);
+              window.location.href = 'admin.html';
+            } else {
+              localStorage.setItem('jwtTokenVoter', data.token);
+              window.location.href = 'index.html';
+            }
+          } else {
+            throw new Error(data.message || 'Login failed');
+          }
+          
+        } catch (error) {
+          console.error('Login error:', error);
+          
+          // Handle specific error cases
+          if (error.message.includes('Failed to fetch')) {
+            showError('Cannot connect to the server. Please check if the backend is running.');
+          } else {
+            showError(error.message || 'Login failed. Please try again.');
+          }
+          
+          // Reset button state
+          const loginButton = loginForm.querySelector('button');
+          loginButton.innerHTML = '<b>Login</b>';
+          loginButton.disabled = false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

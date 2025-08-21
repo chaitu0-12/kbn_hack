@@ -1,0 +1,23 @@
+{
+  "name": "decentralized-voting",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@truffle/contract": "^4.6.31",
+    "@truffle/interface-adapter": "^0.5.37",
+    "dotenv": "^16.0.3",
+    "ethers": "^6.15.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.1"
+  }
+}
